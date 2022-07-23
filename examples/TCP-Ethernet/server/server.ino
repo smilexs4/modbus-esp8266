@@ -9,8 +9,12 @@
 */
 
 #include <SPI.h>
+#include <Portenta_Ethernet.h>
 #include <Ethernet.h>       // Ethernet library v2 is required
-#include <ModbusEthernet.h>
+
+#include <ModbusAPI.h>
+#include <ModbusTCPTemplate.h>
+class ModbusEthernet : public ModbusAPI<ModbusTCPTemplate<EthernetServer, EthernetClient>> {};
 
 // Enter a MAC address and IP address for your controller below.
 byte mac[] = {
@@ -24,7 +28,7 @@ void setup() {
   #if defined(AVR_LEONARDO)
   while (!Serial) {}        // wait for serial port to connect. Needed for Leonardo only
   #endif
-  Ethernet.init(5);        // SS pin
+  //Ethernet.init(5);        // SS pin
   Ethernet.begin(mac, ip);  // start the Ethernet connection
   delay(1000);              // give the Ethernet shield a second to initialize
   mb.server();              // Act as Modbus TCP server
