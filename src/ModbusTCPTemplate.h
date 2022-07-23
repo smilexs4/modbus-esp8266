@@ -8,6 +8,9 @@
 #pragma once
 #include "Modbus.h"
 
+#define ACCEPT available()
+//#define ACCEPT accept()
+
 #define BIT_SET(a,b) ((a) |= (1ULL<<(b)))
 #define BIT_CLEAR(a,b) ((a) &= ~(1ULL<<(b)))
 #define BIT_CHECK(a,b) (!!((a) & (1ULL<<(b))))        // '!!' to make sure this returns 0 or 1
@@ -211,14 +214,19 @@ void ModbusTCPTemplate<SERVER, CLIENT>::task() {
 	uint32_t taskStart = millis();
 	cleanupConnections();
 	if (tcpserver) {
-		CLIENT c;
+//Serial.println("TASK: Got connection");
+		CLIENT c = tcpserver->ACCEPT;
+//Serial.println("TASK: Accept client");
 		// WiFiServer.available() == Ethernet.accept() and should wrapped to get code to be compatible with Ethernet library (See ModbusTCP.h code).
 		// WiFiServer.available() != Ethernet.available() internally
-		while (millis() - taskStart < MODBUSIP_MAX_READMS && (c = tcpserver->accept())) {
+		while (millis() - taskStart < MODBUSIP_MAX_READMS && c) {
 #if defined(MODBUSIP_DEBUG)
 			Serial.println("IP: Accepted");
 #endif
 			CLIENT* currentClient = new CLIENT(c);
+Serial.println("TASK: Copy client");
+			c = tcpserver->ACCEPT;
+Serial.println("TASK: Got next client");
 			if (!currentClient || !currentClient->connected()) {
 				delete currentClient;
 				continue;
