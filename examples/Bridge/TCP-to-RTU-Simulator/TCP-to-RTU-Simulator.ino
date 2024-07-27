@@ -60,7 +60,7 @@ Modbus::ResultCode cbTcpRaw(uint8_t* data, uint8_t len, void* custom) {
 
   if (transRunning) { // Note that we can't process new requests from TCP-side while waiting for responce from RTU-side.
     tcp.setTransactionId(src->transactionId); // Set transaction id as per incoming request
-    tcp.errorResponce(IPAddress((src->ipaddr), (Modbus::FunctionCode)data[0], Modbus::EX_SLAVE_DEVICE_BUSY);
+    tcp.errorResponce(IPAddress(src->ipaddr), (Modbus::FunctionCode)data[0], Modbus::EX_SLAVE_DEVICE_BUSY);
     return Modbus::EX_SLAVE_DEVICE_BUSY;
   }
 
