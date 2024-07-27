@@ -113,12 +113,14 @@ class ModbusTLS : public ModbusAPI<ModbusTCPTemplate<WiFiServerSecure, WiFiClien
         }
         #endif
         //return tcpclient[p]->connect(ip, port);
-        if (host)
+        if (host) {
           if (!tcpclient[p]->connect(host, port))
             return false;
-        else 
+        }
+        else {
           if (!tcpclient[p]->connect(ip, port))
             return false;
+        }
         return true;
     }
 };
